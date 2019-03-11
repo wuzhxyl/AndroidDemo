@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AndroidDemo</string>
+
+    <string name="auth">APP需要该权限，请您授予，否则可能功能不完整</string>
+    <string name="warn">警告</string>
+    <string name="maunalauth">手动认证</string>
+
+</resources>
