@@ -8,6 +8,7 @@ import android.os.Looper;
 public class App extends Application {
 	private static Context sContext;
 	private static Handler sHandler; // 全局性的Handler
+	private static boolean isTestVer = false;
 
 	@Override
 	public void onCreate() {
@@ -23,5 +24,9 @@ public class App extends Application {
 
 	public static void postRunnable(Runnable runnable) {
 		sHandler.post(runnable);
+	}
+
+	public static boolean isTestVer() {
+		return isTestVer;
 	}
 }

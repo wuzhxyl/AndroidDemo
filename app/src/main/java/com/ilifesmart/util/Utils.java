@@ -35,6 +35,7 @@ public class Utils {
 	public static final String PERMISSIONS_READ_PHONE_STATE = Manifest.permission.READ_PHONE_STATE;
 	public static final String PERMISSIONS_CAMERA = Manifest.permission.CAMERA;
 	public static final String PERMISSIONS_WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+	public static final String PERMISSIONS_RECORD_AUDIO = Manifest.permission.RECORD_AUDIO;
 
 	public static boolean isVersionAfterM() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
@@ -62,6 +63,7 @@ public class Utils {
 	public static final int PERMISSION_CODE_CALL_PHONE = 10086;
 	public static final int PERMISSION_CODE_SEND_MESSAGE = 10087;
 	public static final int PERMISSION_CODE_CAMERA = 10088;
+	public static final int PERMISSION_CODE_RECORD_AUDIO = 10089;
 	@TargetApi(23)
 	public static void requestPermissions(Activity context, String permission, boolean firstRequest, int requestCode) {
 		if (!checkPermissionGranted(permission)) {
