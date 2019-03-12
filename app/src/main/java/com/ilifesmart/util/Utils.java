@@ -37,6 +37,7 @@ public class Utils {
 	public static final String PERMISSIONS_WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 	public static final String PERMISSIONS_RECORD_AUDIO = Manifest.permission.RECORD_AUDIO;
 	public static final String PERMISSIONS_ACCESS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+	public static final String PERMISSIONS_READ_CONTACTS = Manifest.permission.READ_CONTACTS;
 
 	public static boolean isVersionAfterM() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
@@ -66,6 +67,7 @@ public class Utils {
 	public static final int PERMISSION_CODE_CAMERA = 10088;
 	public static final int PERMISSION_CODE_RECORD_AUDIO = 10089;
 	public static final int PERMISSION_CODE_ACCESS_FINE_LOCATION = 10090;
+	public static final int PERMISSION_CODE_READ_CONTACTS = 10091;
 
 	@TargetApi(23)
 	public static void requestPermissions(Activity context, String permission, boolean firstRequest, int requestCode) {

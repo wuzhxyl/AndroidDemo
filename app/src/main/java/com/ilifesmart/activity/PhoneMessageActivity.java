@@ -66,6 +66,12 @@ public class PhoneMessageActivity extends BaseActivity {
 		ButterKnife.bind(this);
 		mSendReceiver = new SendReceiver();
 		registerReceiver(mSendReceiver, new IntentFilter(SMS_ACTION));
+
+		if (getIntent() != null) {
+			String phone = getIntent().getStringExtra("PHONE");
+			Log.d(TAG, "onCreate: phone " + phone);
+			mPhone.setText(phone);
+		}
 	}
 
 	@OnClick({R.id.dial, R.id.message})

@@ -10,6 +10,7 @@ import android.widget.Button;
 import com.ilifesmart.App;
 import com.ilifesmart.activity.BaseActivity;
 import com.ilifesmart.activity.DevicesInfoActivity;
+import com.ilifesmart.activity.DownloadActivity;
 import com.ilifesmart.activity.PhoneMessageActivity;
 import com.ilifesmart.activity.SnapQrcodeVoiceActivity;
 import com.ilifesmart.util.Utils;
@@ -72,6 +73,7 @@ public class MainActivity extends BaseActivity {
             case R.id.share:
                 break;
             case R.id.upgrade:
+                Utils.startActivity(this, DownloadActivity.class);
                 break;
             case R.id.ftp:
                 break;

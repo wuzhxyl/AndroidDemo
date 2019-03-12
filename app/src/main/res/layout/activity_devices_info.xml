@@ -36,5 +36,11 @@
             android:text="经纬度"
             android:textAllCaps="false"
             />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/contacts"
+            android:text="通讯录"
+            />
     </LinearLayout>
 </LinearLayout>
