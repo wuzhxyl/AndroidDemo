@@ -1,11 +1,15 @@
 package com.ilifesmart.androiddemo;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
 import com.ilifesmart.App;
+import com.ilifesmart.activity.BaseActivity;
+import com.ilifesmart.activity.DevicesInfoActivity;
 import com.ilifesmart.activity.PhoneMessageActivity;
 import com.ilifesmart.activity.SnapQrcodeVoiceActivity;
 import com.ilifesmart.util.Utils;
@@ -14,7 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     @BindView(R.id.H5)
     Button mH5;
@@ -52,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
             case R.id.H5:
                 break;
             case R.id.device_info:
+                if (Utils.checkPermissionGranted(Utils.PERMISSIONS_ACCESS_FINE_LOCATION)) {
+                    Utils.startActivity(this, DevicesInfoActivity.class);
+                } else {
+                    Utils.requestPermissions(this, Utils.PERMISSIONS_ACCESS_FINE_LOCATION, true, Utils.PERMISSION_CODE_ACCESS_FINE_LOCATION);
+                }
+
                 break;
             case R.id.device_phone_msg:
                 Utils.startActivity(this, PhoneMessageActivity.class);
@@ -68,5 +78,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
+        if (requestCode == Utils.PERMISSION_CODE_ACCESS_FINE_LOCATION) {
+            boolean isAllGranted = true;
+
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    isAllGranted = false;
+                    break;
+                }
+            }
+
+            if (!isAllGranted) {
+                alertPermissionRequest(permissions);
+            } else {
+                Utils.startActivity(this, DevicesInfoActivity.class);
+            }
+        }
+    }
 }

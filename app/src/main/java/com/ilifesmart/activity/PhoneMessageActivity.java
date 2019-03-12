@@ -118,40 +118,4 @@ public class PhoneMessageActivity extends BaseActivity {
 		}
 	}
 
-	private int PERMISSION_CODE_MANUAL = 2;
-	private AlertDialog permissonDialog;
-
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-	private void alertPermissionRequest(String[] permissions) {
-		if (permissonDialog == null) {
-			DetachableClickListener OnPositiveListener = DetachableClickListener.wrap(new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-					Intent intent = new Intent();
-					intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-					intent.addCategory(Intent.CATEGORY_DEFAULT);
-					intent.setData(Uri.parse("package:" + getPackageName()));
-					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-					intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-					startActivityForResult(intent, PERMISSION_CODE_MANUAL);
-				}
-			});
-
-			DetachableDismissListener OnDismissListener = DetachableDismissListener.wrap(new DialogInterface.OnDismissListener() {
-				@Override
-				public void onDismiss(DialogInterface dialogInterface) {
-				}
-			});
-			permissonDialog = new AlertDialog.Builder(this).setMessage(getResources().getText(R.string.auth))
-							.setTitle(getResources().getText(R.string.warn))
-							.setPositiveButton(getResources().getText(R.string.maunalauth), OnPositiveListener)
-							.setOnDismissListener(OnDismissListener)
-							.create();
-			OnPositiveListener.clearOnDetach(permissonDialog);
-			OnDismissListener.clearOnDetach(permissonDialog);
-		}
-		permissonDialog.show();
-	}
-
 }

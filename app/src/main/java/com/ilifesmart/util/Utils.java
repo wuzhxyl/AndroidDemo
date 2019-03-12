@@ -4,18 +4,18 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.ExifInterface;
-import android.net.LocalSocketAddress;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.ilifesmart.App;
 import com.ilifesmart.activity.PhoneMessageActivity;
@@ -36,6 +36,7 @@ public class Utils {
 	public static final String PERMISSIONS_CAMERA = Manifest.permission.CAMERA;
 	public static final String PERMISSIONS_WRITE_EXTERNAL_STORAGE = Manifest.permission.WRITE_EXTERNAL_STORAGE;
 	public static final String PERMISSIONS_RECORD_AUDIO = Manifest.permission.RECORD_AUDIO;
+	public static final String PERMISSIONS_ACCESS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
 
 	public static boolean isVersionAfterM() {
 		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
@@ -64,6 +65,8 @@ public class Utils {
 	public static final int PERMISSION_CODE_SEND_MESSAGE = 10087;
 	public static final int PERMISSION_CODE_CAMERA = 10088;
 	public static final int PERMISSION_CODE_RECORD_AUDIO = 10089;
+	public static final int PERMISSION_CODE_ACCESS_FINE_LOCATION = 10090;
+
 	@TargetApi(23)
 	public static void requestPermissions(Activity context, String permission, boolean firstRequest, int requestCode) {
 		if (!checkPermissionGranted(permission)) {
@@ -96,9 +99,9 @@ public class Utils {
 	 * 此方法需要获取拨打电话的权限，并且会直接拨号
 	 * */
 	public static void callPhone(Context context, String phone) {
-		Intent i = new Intent(Intent.ACTION_CALL);
-		i.setData(Uri.parse("tel:"+phone));
-		context.startActivity(i);
+//		Intent i = new Intent(Intent.ACTION_CALL);
+//		i.setData(Uri.parse("tel:"+phone));
+//		context.startActivity(i);
 	}
 
 	/*
@@ -183,5 +186,17 @@ public class Utils {
 			e.printStackTrace();
 		}
 
+	}
+
+	public static String getClipboardContent() {
+		ClipboardManager clipboardManager = (ClipboardManager) App.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+		ClipData data = clipboardManager.getPrimaryClip();
+		ClipData.Item item = data.getItemAt(0);
+		return item.getText().toString();
+	}
+
+	public static void getDevInfo() {
+		Log.d(TAG, "getDevInfo: ModelType " + Build.MODEL);
+		Log.d(TAG, "getDevInfo: OSVer " + Build.VERSION.RELEASE);
 	}
 }
