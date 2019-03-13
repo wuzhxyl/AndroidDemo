@@ -14,17 +14,11 @@ import com.ilifesmart.activity.DevicesInfoActivity;
 import com.ilifesmart.activity.DownloadActivity;
 import com.ilifesmart.activity.PhoneMessageActivity;
 import com.ilifesmart.activity.SnapQrcodeVoiceActivity;
-import com.ilifesmart.model.DocScannerTask;
 import com.ilifesmart.util.Utils;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-//import droidninja.filepicker.FilePickerBuilder;
-//import droidninja.filepicker.cursors.loadercallbacks.FileResultCallback;
-//import droidninja.filepicker.models.Document;
 
 public class MainActivity extends BaseActivity {
 
@@ -51,9 +45,6 @@ public class MainActivity extends BaseActivity {
 
         if (!App.isTestVer()) {
             mH5.setVisibility(View.GONE);
-            mDeviceInfo.setVisibility(View.GONE);
-            mShare.setVisibility(View.GONE);
-            mUpgrade.setVisibility(View.GONE);
             mFtp.setVisibility(View.GONE);
         }
     }
@@ -64,12 +55,7 @@ public class MainActivity extends BaseActivity {
             case R.id.H5:
                 break;
             case R.id.device_info:
-                if (Utils.checkPermissionGranted(Utils.PERMISSIONS_ACCESS_FINE_LOCATION)) {
-                    Utils.startActivity(this, DevicesInfoActivity.class);
-                } else {
-                    Utils.requestPermissions(this, Utils.PERMISSIONS_ACCESS_FINE_LOCATION, true, Utils.PERMISSION_CODE_ACCESS_FINE_LOCATION);
-                }
-
+                Utils.startActivity(this, DevicesInfoActivity.class);
                 break;
             case R.id.device_phone_msg:
                 Utils.startActivity(this, PhoneMessageActivity.class);
@@ -78,18 +64,12 @@ public class MainActivity extends BaseActivity {
                 Utils.startActivity(this, SnapQrcodeVoiceActivity.class);
                 break;
             case R.id.share:
-                Utils.onSendText(this, "BBBB");
+                Utils.onSendText(this, "系统测试数据, 请忽略。");
                 break;
             case R.id.upgrade:
                 Utils.startActivity(this, DownloadActivity.class);
                 break;
             case R.id.upload:
-//                new DocScannerTask(this, new FileResultCallback<Document>() {
-//                    @Override
-//                    public void onResultCallback(List<? extends Document> list) {
-//                        Log.d("DocScannerTask", "onResultCallback: " + list);
-//                    }
-//                });
                 break;
         }
     }

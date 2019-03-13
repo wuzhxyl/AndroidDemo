@@ -15,7 +15,7 @@ import com.ilifesmart.interfaces.ILocationChanged;
 public class App extends Application {
 	private static Context sContext;
 	private static Handler sHandler; // 全局性的Handler
-	private static boolean isTestVer = true;
+	private static boolean isTestVer = false;
 	private static AMapLocationClient mLocationClient;
 	private static AMapLocationClientOption mLocationClientOption;
 
@@ -29,15 +29,10 @@ public class App extends Application {
 				if (aMapLocation.getErrorCode() == 0) {
 					mLatitude = aMapLocation.getLatitude();
 					mLongitude = aMapLocation.getLongitude();
-					Log.d("Location", "onLocationChanged: getLatitude " + aMapLocation.getLatitude());
-					Log.d("Location", "onLocationChanged: getLongitude " + aMapLocation.getLongitude());
 					if (sLocationCB != null) {
 						sLocationCB.onLocationChanged(mLatitude, mLongitude);
 					}
 				} else {
-					Log.e("Location", "onLocationChanged: errCode " + aMapLocation.getErrorCode() + "\n"
-						+" ErrInfo " + aMapLocation.getErrorInfo()
-					);
 					sLocationCB.onLocationError(aMapLocation.getErrorCode(), aMapLocation.getErrorInfo());
 				}
 			}

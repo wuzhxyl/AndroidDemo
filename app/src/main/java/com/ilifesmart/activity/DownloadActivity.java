@@ -5,10 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -61,8 +63,21 @@ public class DownloadActivity extends BaseActivity {
 
     boolean isLoading = false;
     protected String apkPath;
+
+    /*
+    * apkPath: apk下载位置 /Download.
+    * isLoading: 正在载入中，避免多次点击.
+    * */
     @OnClick(R.id.download)
-    public void onViewClicked() {
+    public void onDownloadClicked() {
+        if (Utils.checkPermissionGranted(Utils.PERMISSIONS_WRITE_EXTERNAL_STORAGE)) {
+            onDownloadApk();
+        } else {
+            Utils.requestPermissions(this, Utils.PERMISSIONS_WRITE_EXTERNAL_STORAGE, true, Utils.PERMISSIONS_CODE_WRITE_EXTERNAL_STORAGE);
+        }
+    }
+
+    private void onDownloadApk() {
         if (isLoading) {
             return;
         }
@@ -70,31 +85,25 @@ public class DownloadActivity extends BaseActivity {
         isLoading = true;
     }
 
-//    public static void installNormal(Context context, String apkPath) {
-//        Intent intent = new Intent(Intent.ACTION_VIEW);
-//        //版本在7.0以上是不能直接通过uri访问的
-//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-//            File file = (new File(apkPath));
-//            // 由于没有在Activity环境下启动Activity,设置下面的标签
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            //参数1:上下文, 参数2:Provider主机地址 和配置文件中保持一致,参数3:共享的文件
-//            Uri apkUri = FileProvider.getUriForFile(context, "com.xxxxx.fileprovider", file);
-//            //添加这一句表示对目标应用临时授权该Uri所代表的文件
-//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//            intent.setDataAndType(apkUri, "application/vnd.android.package-archive");
-//        } else {
-//            intent.setDataAndType(Uri.fromFile(new File(apkPath)),
-//                    "application/vnd.android.package-archive");
-//        }
-//        context.startActivity(intent);
-//    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (resultCode == InstallUtil.UNKNOWN_CODE) {
-//            new InstallUtil(DownloadActivity.this, DownloadActivity.this.apkPath).install();
-//        }
-//    }
+        if (requestCode == Utils.PERMISSIONS_CODE_WRITE_EXTERNAL_STORAGE) {
+            boolean isAllGranted = true;
+
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    isAllGranted = false;
+                    break;
+                }
+            }
+
+            if (!isAllGranted) {
+                alertPermissionRequest(permissions);
+            } else {
+                onDownloadApk();
+            }
+        }
+    }
 }

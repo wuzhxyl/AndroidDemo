@@ -33,10 +33,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SnapQrcodeVoiceActivity extends AppCompatActivity {
+public class SnapQrcodeVoiceActivity extends BaseActivity {
 
     public static final String TAG = "SnapQrcodeVoiceActivity";
-    private final static int REQUEST_CODE_CAMERA = 2047;
+    public final static int REQUEST_CODE_CAMERA = 2047;
     @BindView(R.id.imageview)
     ImageView mImageview;
     @BindView(R.id.voice)
@@ -70,10 +70,6 @@ public class SnapQrcodeVoiceActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mUpdate);
-        BitmapDrawable drawable = (BitmapDrawable) mImageview.getDrawable();
-        if (drawable != null && drawable.getBitmap() != null) {
-            drawable.getBitmap().recycle(); // 回收.
-        }
         stopRecord();
     }
 
@@ -89,24 +85,7 @@ public class SnapQrcodeVoiceActivity extends AppCompatActivity {
     private void takePhoto() {
         mImageview.setVisibility(View.VISIBLE);
         mSoundPath.setVisibility(View.GONE);
-        File image = null;
-        try {
-            image = Utils.createImageFile();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-        Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        i.addCategory(Intent.CATEGORY_DEFAULT);
-        if (image != null) {
-            Uri photoUri = FileProvider.getUriForFile(this, "com.example.android.fileprovider", image);
-            i.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-        }
-        if (i.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(i, REQUEST_CODE_CAMERA);
-        } else {
-            Toast.makeText(this, "不支持", Toast.LENGTH_SHORT).show();
-        }
+        Utils.takeCameraSnap(this);
     }
 
     @OnClick(R.id.qrcode)
@@ -139,51 +118,15 @@ public class SnapQrcodeVoiceActivity extends AppCompatActivity {
         }
     }
 
-    private File currentFile;
     private void startRecord() {
-        if (mRecorder == null) {
-            File dir = new File(Environment.getExternalStorageDirectory(), "sounds");
-            if (!dir.exists()) {
-                try {
-                    dir.mkdirs();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-
-            currentFile = new File(dir, System.currentTimeMillis() + ".amr");
-            if (!currentFile.exists()) {
-                try {
-                    currentFile.createNewFile();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-
-            mRecorder = new MediaRecorder();
-            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.AMR_WB); // 50－7000Hz，16KHz采样
-            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_WB);
-            mRecorder.setOutputFile(currentFile.getAbsolutePath());
-
-            try {
-                mRecorder.prepare();
-                mRecorder.start();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
+        Utils.startRecord();
     }
 
     private void stopRecord() {
-        if (mRecorder != null) {
-            mRecorder.stop();
-            mRecorder.release();
-            mRecorder = null;
-        }
+        Utils.stopRecord();
         mImageview.setVisibility(View.GONE);
         mSoundPath.setVisibility(View.VISIBLE);
-
+        File currentFile = Utils.getCurrentFile();
         if (currentFile != null) {
             mSoundPath.setText("音频存储路径：\r\n" + currentFile.getAbsolutePath());
         }
@@ -227,6 +170,8 @@ public class SnapQrcodeVoiceActivity extends AppCompatActivity {
                 } else if (requestCode == Utils.PERMISSION_CODE_RECORD_AUDIO) {
                     startRecord();
                 }
+            } else {
+                alertPermissionRequest(permissions);
             }
         }
     }

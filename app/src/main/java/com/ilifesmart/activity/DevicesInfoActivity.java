@@ -72,7 +72,6 @@ public class DevicesInfoActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d("Amap", "onResume: --------------> ");
 		if (Utils.checkPermissionGranted(new String[]{Utils.PERMISSIONS_WRITE_EXTERNAL_STORAGE, Utils.PERMISSIONS_READ_PHONE_STATE, Utils.PERMISSIONS_ACCESS_FINE_LOCATION})) {
 			startLocation();
 		} else {
@@ -85,17 +84,6 @@ public class DevicesInfoActivity extends BaseActivity {
 		super.onPause();
 		stopLocation();
 	}
-
-//	@OnClick(R.id.latitude)
-//	public void onLocationClicked() {
-//		if (Utils.checkPermissionGranted(new String[]{Utils.PERMISSIONS_WRITE_EXTERNAL_STORAGE, Utils.PERMISSIONS_READ_PHONE_STATE, Utils.PERMISSIONS_ACCESS_FINE_LOCATION})) {
-//			startLocation();
-//		} else {
-//			Utils.requestPermissions(this, new String[]{Utils.PERMISSIONS_WRITE_EXTERNAL_STORAGE, Utils.PERMISSIONS_READ_PHONE_STATE, Utils.PERMISSIONS_ACCESS_FINE_LOCATION}, true, Utils.PERMISSION_CODE_ACCESS_FINE_LOCATION);
-//		}
-//	}
-
-	private boolean isLoading = false;
 
 	private void startLocation() {
 		App.startLocation(new ILocationChanged() {
@@ -125,6 +113,7 @@ public class DevicesInfoActivity extends BaseActivity {
 	public void onOsInfo() {
 		popupDialog("系统信息", Utils.getDevInfo());
 	}
+
 
 	private class NetworkChangedReceiver extends BroadcastReceiver {
 		@Override

@@ -30,8 +30,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.ilifesmart.util.Utils.PERMISSION_CODE_CALL_PHONE;
-
 public class PhoneMessageActivity extends BaseActivity {
 
 	public static final String TAG = "PhoneMessageActivity";
@@ -50,9 +48,9 @@ public class PhoneMessageActivity extends BaseActivity {
 			if (intent != null && intent.getAction().equals(SMS_ACTION)) {
 				int resultCode = getResultCode();
 				if (resultCode == RESULT_OK) {
-					Toast.makeText(context, "消息发送成功", Toast.LENGTH_SHORT).show();
+					Toast.makeText(context, "短消息发送成功", Toast.LENGTH_SHORT).show();
 				} else {
-					ToastUtils.show(context, "消息发送失败");
+					ToastUtils.show(context, "短消息发送失败");
 				}
 			}
 		}
@@ -69,7 +67,6 @@ public class PhoneMessageActivity extends BaseActivity {
 
 		if (getIntent() != null) {
 			String phone = getIntent().getStringExtra("PHONE");
-			Log.d(TAG, "onCreate: phone " + phone);
 			mPhone.setText(phone);
 		}
 	}
@@ -78,12 +75,6 @@ public class PhoneMessageActivity extends BaseActivity {
 	public void onButtonClicked(View view) {
 		switch (view.getId()) {
 			case R.id.dial:
-//				if (Utils.checkPermissionGranted(Utils.PERMISSIONS_CALL_PHONE)) {
-//					Utils.callPhone(this, mPhone.getText().toString());
-//				} else if (PersistentMgr.readKV(BOOLEAN_PERMISSIONS_CALL_PHONE, "false").equals("false")){
-//					PersistentMgr.putKV(BOOLEAN_PERMISSIONS_CALL_PHONE, "true");
-//					Utils.requestPermissions(this, Utils.PERMISSIONS_CALL_PHONE, true, Utils.PERMISSION_CODE_CALL_PHONE);
-//				}
 				Utils.dialMobile(this, mPhone.getText().toString());
 				break;
 			case R.id.message:

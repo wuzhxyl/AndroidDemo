@@ -33,7 +33,7 @@ public class QrcodeActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
-            String content = result.getContents();
+            String content = result.getContents(); // 扫码返回内容.
             if (content == null) {
                 // invalid
                 mQrcodeInfo.setText("无效的数据");

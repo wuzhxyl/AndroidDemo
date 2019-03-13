@@ -37,16 +37,6 @@ public class NetworkUtils {
 		return false;
 	}
 
-	public static boolean getWifiName(Context context) {
-		String result = "";
-		if (context != null) {
-//			ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//			NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-//			result = (networkInfo != null) ? networkInfo.get
-		}
-		return false;
-	}
-
 	// 判断外网是否可用
 	public static boolean isNetworkOnline(Context context) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -58,6 +48,7 @@ public class NetworkUtils {
 		}
 	}
 
+	// 判断网络是否可用(低版本兼容)
 	public static boolean isNetworkAccessibleByPing() {
 		Runtime runtime = Runtime.getRuntime();
 		try {
@@ -189,7 +180,9 @@ public class NetworkUtils {
 		return result;
 	}
 
-	public static final String TAG = "NetworkStatus";
+		/*
+		* 当前网络名称.
+		* */
 	public static String getNetworkName(Context context) {
 		String result = getNetworkType(context);
 
@@ -199,7 +192,6 @@ public class NetworkUtils {
 			WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
 			result = wifiInfo.getSSID();
-			Log.d(TAG, "getNetworkName: wifoInfo " + wifiInfo);
 		}
 
 		return result;
