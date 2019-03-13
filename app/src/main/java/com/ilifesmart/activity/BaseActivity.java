@@ -88,4 +88,10 @@ public class BaseActivity extends AppCompatActivity {
 		permissonDialog.show();
 	}
 
+	protected void popupDialog(String title, String message) {
+		new AlertDialog.Builder(this).setTitle(title)
+						.setCancelable(true)
+						.setMessage(message).show();
+	}
+
 }

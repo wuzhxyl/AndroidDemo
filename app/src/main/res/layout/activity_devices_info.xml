@@ -42,5 +42,11 @@
             android:id="@+id/contacts"
             android:text="通讯录"
             />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/os"
+            android:text="系统信息"
+            />
     </LinearLayout>
 </LinearLayout>

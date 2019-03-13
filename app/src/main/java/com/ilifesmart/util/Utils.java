@@ -3,6 +3,7 @@ package com.ilifesmart.util;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -19,6 +20,7 @@ import android.util.Log;
 
 import com.ilifesmart.App;
 import com.ilifesmart.activity.PhoneMessageActivity;
+import com.ilifesmart.model.OwnFileProvider;
 import com.ilifesmart.ui.ToastUtils;
 
 import java.io.File;
@@ -197,8 +199,41 @@ public class Utils {
 		return item.getText().toString();
 	}
 
-	public static void getDevInfo() {
-		Log.d(TAG, "getDevInfo: ModelType " + Build.MODEL);
-		Log.d(TAG, "getDevInfo: OSVer " + Build.VERSION.RELEASE);
+	// 获取操作系统版本号
+	public static String getOsVersion() {
+		return Build.VERSION.RELEASE;
 	}
+
+	// 获取设备型号
+	public static String getMobileModel() {
+		return Build.MODEL;
+	}
+
+	public static String getDevInfo() {
+		return "Android版本: " + getOsVersion() + ";\n型号: " + getMobileModel();
+	}
+
+	private static Uri getFileUri(String apkPath) {
+		File file = new File(apkPath);
+		return Uri.fromFile(file);
+	}
+
+	public static void startDownload(Context context, String apkPath) {
+		String url = "http://140.143.243.75:8090/AndroidDemo/AndroidDemo.apk"; // 下载地址
+		DownloadManager downloadManager = (DownloadManager)context.getSystemService(Context.DOWNLOAD_SERVICE);
+		Uri uri = Uri.parse(url);
+		DownloadManager.Request request = new DownloadManager.Request(uri);
+		request.setVisibleInDownloadsUi(true);
+		request.setTitle("应用更新");
+		request.setDescription("测试更新apk");
+		request.setMimeType("application/vnd.android.package-archive");
+		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
+			request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+		}
+
+		apkPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
+		apkPath += File.separator + "AndroidDemo" + ".apk";
+		Uri fileUri = getFileUri(apkPath);
+		request.setDestinationUri(fileUri);
+		downloadManager.enqueue(request);	}
 }
