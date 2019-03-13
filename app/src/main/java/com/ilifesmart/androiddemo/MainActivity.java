@@ -4,6 +4,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -13,11 +14,17 @@ import com.ilifesmart.activity.DevicesInfoActivity;
 import com.ilifesmart.activity.DownloadActivity;
 import com.ilifesmart.activity.PhoneMessageActivity;
 import com.ilifesmart.activity.SnapQrcodeVoiceActivity;
+import com.ilifesmart.model.DocScannerTask;
 import com.ilifesmart.util.Utils;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+//import droidninja.filepicker.FilePickerBuilder;
+//import droidninja.filepicker.cursors.loadercallbacks.FileResultCallback;
+//import droidninja.filepicker.models.Document;
 
 public class MainActivity extends BaseActivity {
 
@@ -33,7 +40,7 @@ public class MainActivity extends BaseActivity {
     Button mShare;
     @BindView(R.id.upgrade)
     Button mUpgrade;
-    @BindView(R.id.ftp)
+    @BindView(R.id.upload)
     Button mFtp;
 
     @Override
@@ -51,7 +58,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.H5, R.id.device_info, R.id.device_phone_msg, R.id.snap_scancode_voice, R.id.share, R.id.upgrade, R.id.ftp})
+    @OnClick({R.id.H5, R.id.device_info, R.id.device_phone_msg, R.id.snap_scancode_voice, R.id.share, R.id.upgrade, R.id.upload})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.H5:
@@ -71,11 +78,18 @@ public class MainActivity extends BaseActivity {
                 Utils.startActivity(this, SnapQrcodeVoiceActivity.class);
                 break;
             case R.id.share:
+                Utils.onSendText(this, "BBBB");
                 break;
             case R.id.upgrade:
                 Utils.startActivity(this, DownloadActivity.class);
                 break;
-            case R.id.ftp:
+            case R.id.upload:
+//                new DocScannerTask(this, new FileResultCallback<Document>() {
+//                    @Override
+//                    public void onResultCallback(List<? extends Document> list) {
+//                        Log.d("DocScannerTask", "onResultCallback: " + list);
+//                    }
+//                });
                 break;
         }
     }

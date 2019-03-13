@@ -9,16 +9,22 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.LabeledIntent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
 import com.ilifesmart.App;
+import com.ilifesmart.activity.BaseActivity;
 import com.ilifesmart.activity.PhoneMessageActivity;
 import com.ilifesmart.model.OwnFileProvider;
 import com.ilifesmart.ui.ToastUtils;
@@ -28,6 +34,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Utils {
 
@@ -235,5 +242,83 @@ public class Utils {
 		apkPath += File.separator + "AndroidDemo" + ".apk";
 		Uri fileUri = getFileUri(apkPath);
 		request.setDestinationUri(fileUri);
-		downloadManager.enqueue(request);	}
+		downloadManager.enqueue(request);
+	}
+
+//	private static
+
+	private static boolean isMatchWeixinAndWeibo(ResolveInfo info) {
+		String packagename_weixin = "com.tencent.mm";
+		String packagename_weixin_favorite = "com.tencent.mm.ui.tools.AddFavoriteUI";
+		String packagename_weixin_friend = "com.tencent.mm.ui.tools.ShareImgUI";
+
+		String packagename_weibo = "com.sina.weibo";
+		String packagename_weibo_sendweibo = "com.sina.weibo.composerinde.ComposerDispatchActivity"; // 发布新微博
+		String packagename_weibo_private = "com.sina.weibo.weiyou.share.WeiyouShareDispatcher";    // 私信
+
+
+		boolean isMatch = false;
+		if (info != null) {
+			String packageName = info.activityInfo.packageName.toLowerCase();
+			String className = info.activityInfo.name.toLowerCase();
+
+			Log.d(TAG, "isMatchWeixinAndWeibo: packageName " + packageName);
+			Log.d(TAG, "isMatchWeixinAndWeibo: classname " + className);
+			isMatch = ((packageName.contains(packagename_weibo) && (className.contains(packagename_weibo_sendweibo) || className.contains(packagename_weibo_private))) || (packageName.contains(packagename_weixin) && (className.contains(packagename_weixin_favorite) || className.contains(packagename_weixin_friend))));
+		}
+
+		return isMatch;
+	}
+
+	public static void onSendText(Context context, String text) {
+		Intent share = new Intent(Intent.ACTION_SEND);
+		share.setType("*/*");
+		share.putExtra(Intent.EXTRA_SUBJECT, ""); // 主题
+		share.putExtra(Intent.EXTRA_TEXT, ""); // 正文字符串
+		share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+		List<ResolveInfo> infos = context.getPackageManager().queryIntentActivities(share, 0);
+		if (infos != null) {
+			List<Intent> targetIntents = new ArrayList<>();
+			PackageManager pm = context.getPackageManager();
+			for(ResolveInfo info:infos) {
+
+//				2019-03-13 18:42:00.253 6581-6581/? D/resolveInfos: packageName--->com.tencent.mm  name--->com.tencent.mm.ui.tools.ShareImgUI label--->微信 activity label--->微信 intent-filter label--->微信
+//				2019-03-13 18:42:00.253 6581-6581/? D/resolveInfos: packageName--->com.tencent.mm  name--->com.tencent.mm.ui.tools.AddFavoriteUI label--->微信 activity label--->微信 intent-filter label--->微信
+//				2019-03-13 18:42:00.253 6581-6581/? D/resolveInfos: packageName--->com.tencent.mm  name--->com.tencent.mm.ui.tools.ShareToTimeLineUI label--->微信 activity label--->微信 intent-filter label--->微信
+
+//				2019-03-13 18:42:00.245 6581-6581/? D/resolveInfos: packageName--->com.sina.weibo  name--->com.sina.weibo.composerinde.ComposerDispatchActivity label--->微博 activity label--->发布新微博 intent-filter label--->发布新微博
+//				2019-03-13 18:42:00.245 6581-6581/? D/resolveInfos: packageName--->com.sina.weibo  name--->com.sina.weibo.story.publisher.StoryDispatcher label--->微博 activity label--->微博 intent-filter label--->微博
+//				2019-03-13 18:42:00.245 6581-6581/? D/resolveInfos: packageName--->com.sina.weibo  name--->com.sina.weibo.weiyou.share.WeiyouShareDispatcher label--->微博 activity label--->微博 intent-filter label--->微博
+
+				Log.d("resolveInfos","packageName--->" + info.activityInfo.packageName + "  name--->" + info.activityInfo.name+" label--->"+info.activityInfo.applicationInfo.loadLabel(pm).toString()+" activity label--->"+info.activityInfo.loadLabel(pm).toString()+" intent-filter label--->"+info.activityInfo.loadLabel(pm).toString());
+				if (!isMatchWeixinAndWeibo(info)) {
+					continue;
+				}
+				Intent i = new Intent(Intent.ACTION_SEND);
+				i.setType("text/plain");
+				i.putExtra(Intent.EXTRA_SUBJECT, "分享"); // 主题
+				i.putExtra(Intent.EXTRA_TEXT, text); // 正文字符串
+				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				i.setPackage(info.activityInfo.packageName);
+				i.setClassName(info.activityInfo.packageName, info.activityInfo.name);
+				Intent j = new LabeledIntent(i, info.activityInfo.packageName, info.loadLabel(context.getPackageManager()), info.icon);
+				targetIntents.add(j);
+			}
+
+			Intent chooserIntent = Intent.createChooser(targetIntents.remove(0), "Select");
+			if (chooserIntent == null) {
+				return;
+			}
+
+			chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetIntents.toArray(new Parcelable[] {}));
+			if (chooserIntent.resolveActivity(context.getPackageManager()) != null) {
+				context.startActivity(chooserIntent);
+			} else {
+				Toast.makeText(context, "未找到微信/微博", Toast.LENGTH_SHORT).show();
+			}
+		}
+	}
 }
+
+
