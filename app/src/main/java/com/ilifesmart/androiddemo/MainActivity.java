@@ -1,5 +1,7 @@
 package com.ilifesmart.androiddemo;
 
+import android.Manifest;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -49,7 +51,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.H5, R.id.device_info, R.id.device_phone_msg, R.id.snap_scancode_voice, R.id.share, R.id.upgrade, R.id.upload})
+    @OnClick({R.id.H5, R.id.device_info, R.id.device_phone_msg, R.id.snap_scancode_voice, R.id.share, R.id.upgrade, R.id.upload, R.id.about})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.H5:
@@ -70,6 +72,16 @@ public class MainActivity extends BaseActivity {
                 Utils.startActivity(this, DownloadActivity.class);
                 break;
             case R.id.upload:
+                break;
+            case R.id.about:
+                try {
+                    PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+                    String versionName = info.versionName;
+                    String text = "VersionName: " + versionName;
+                    popupDialog("关于", text);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 break;
         }
     }

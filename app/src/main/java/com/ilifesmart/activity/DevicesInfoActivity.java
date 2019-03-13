@@ -114,7 +114,6 @@ public class DevicesInfoActivity extends BaseActivity {
 		popupDialog("系统信息", Utils.getDevInfo());
 	}
 
-
 	private class NetworkChangedReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(final Context context, Intent intent) {

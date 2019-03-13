@@ -5,7 +5,7 @@ android {
         sign {
             keyAlias 'android'
             keyPassword 'android'
-            storeFile file('/AndroidStudio/AndroidDemo/app/keystore.jks')
+            storeFile file('/workspace/AndroidDemo/app/keystore.jks')
             storePassword 'android'
         }
     }
@@ -14,8 +14,8 @@ android {
         applicationId "com.ilifesmart.androiddemo"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.sign
     }
