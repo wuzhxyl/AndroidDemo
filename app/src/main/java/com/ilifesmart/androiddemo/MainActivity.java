@@ -14,6 +14,7 @@ import com.ilifesmart.App;
 import com.ilifesmart.activity.BaseActivity;
 import com.ilifesmart.activity.DevicesInfoActivity;
 import com.ilifesmart.activity.DownloadActivity;
+import com.ilifesmart.activity.H5Activity;
 import com.ilifesmart.activity.PhoneMessageActivity;
 import com.ilifesmart.activity.SnapQrcodeVoiceActivity;
 import com.ilifesmart.util.Utils;
@@ -46,7 +47,6 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         if (!App.isTestVer()) {
-            mH5.setVisibility(View.GONE);
             mFtp.setVisibility(View.GONE);
         }
     }
@@ -55,6 +55,7 @@ public class MainActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.H5:
+                Utils.startActivity(this, H5Activity.class);
                 break;
             case R.id.device_info:
                 Utils.startActivity(this, DevicesInfoActivity.class);

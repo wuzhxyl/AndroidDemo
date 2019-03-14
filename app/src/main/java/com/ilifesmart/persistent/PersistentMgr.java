@@ -31,6 +31,22 @@ public class PersistentMgr {
 		return sharedPreferences.getString(key, def);
 	}
 
+	public static int readKV(String key, int def) {
+		SharedPreferences sharedPreferences = getPrivateSharedPreferenceFile();
+		return sharedPreferences.getInt(key, def);
+	}
+
+	public static void putKV(String key, int val) {
+		try {
+			SharedPreferences auroraconfig = getPrivateSharedPreferenceFile();
+			SharedPreferences.Editor editor = auroraconfig.edit();
+			editor.putInt(key, val);
+			editor.apply();
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		}
+	}
+
 	public static boolean removeKV(String key) {
 		SharedPreferences sharedPreferences = getPrivateSharedPreferenceFile();
 		sharedPreferences.edit().remove(key);
