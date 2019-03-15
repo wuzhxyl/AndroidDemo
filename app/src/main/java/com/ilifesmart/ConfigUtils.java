@@ -7,11 +7,15 @@ public class ConfigUtils {
 	private static final int VER_CODE_EXTRA_TEXT_HOME_PAGE = 0;
 	private static final int VER_CODE_CONFIG_FILE_URL = 0;
 	private static String config_file_url_test = "http://140.143.243.75:8090/config/androiddemo_web_config.txt";
+	public static String download_apk_url = "http://140.143.243.75:8090/AndroidDemo/AndroidDemo.apk";
+	public static final String lastest_version_url = "http://140.143.243.75:8090/config/lastest_version.txt";
 
 	public static final String EXTRA_TEXT_HOME_PAGE = "HOME_PAGE";
 	public static final String EXTRA_TEXT_HOME_PAGE_VER_CODE = "HOME_PAGE_VER_CODE";
 	public static final String EXTRA_TEXT_CONFIG_FILE_URL = "CONFIG_FILE_URL";
 	public static final String EXTRA_TEXT_CONFIG_FILE_URL_VER_CODE = "CONFIG_FILE_URL_VER_CODE";
+	public static final String EXTRA_TEXT_DOWNLOAD_APK_URL = "DOWNLOAD_APK_URL";
+	public static final String EXTRA_TEXT_LASTEST_VERSION_URL = "LASTEST_VERSION_APK_URL";
 
 	public static final String EXTRA_JSONKEY_CONFIGGILE = "config_file_url";
 	public static final String EXTRA_JSONKEY_HOMEPAGE = "home_page";

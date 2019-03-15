@@ -17,6 +17,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.ilifesmart.App;
 import com.ilifesmart.androiddemo.R;
 import com.ilifesmart.model.OwnFileProvider;
 import com.ilifesmart.util.InstallUtil;
@@ -34,6 +35,7 @@ public class DownloadActivity extends BaseActivity {
     Button mDownload;
 
     public static final String TAG = "DownloadActivity";
+    // 下载完毕后的广播通知.
     private class DownloadReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -61,13 +63,16 @@ public class DownloadActivity extends BaseActivity {
         unregisterReceiver(mReceiver);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        onDownloadApk();
+    }
+
     boolean isLoading = false;
     protected String apkPath;
 
-    /*
-    * apkPath: apk下载位置 /Download.
-    * isLoading: 正在载入中，避免多次点击.
-    * */
     @OnClick(R.id.download)
     public void onDownloadClicked() {
         if (Utils.checkPermissionGranted(Utils.PERMISSIONS_WRITE_EXTERNAL_STORAGE)) {
@@ -77,12 +82,33 @@ public class DownloadActivity extends BaseActivity {
         }
     }
 
+    /*
+     * apkPath: apk下载位置 /Download.
+     * isLoading: 正在载入中，避免多次点击.
+     * */
     private void onDownloadApk() {
         if (isLoading) {
             return;
         }
-        Utils.startDownload(this, apkPath);
+
         isLoading = true;
+        com.ilifesmart.threadpool.Utils.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+            @Override
+            public void run() {
+                if (Utils.isLastestVersion(DownloadActivity.this)) {
+                    Utils.startDownload(DownloadActivity.this, apkPath);
+                } else {
+                    App.postRunnable(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(DownloadActivity.this, "当前已是最新", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+                isLoading = false;
+            }
+        });
+
     }
 
     @Override

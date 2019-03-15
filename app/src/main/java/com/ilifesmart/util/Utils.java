@@ -23,15 +23,17 @@ import android.support.v4.content.FileProvider;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
-import android.webkit.MimeTypeMap;
 import android.widget.Toast;
 
 import com.ilifesmart.App;
+import com.ilifesmart.ConfigUtils;
 import com.ilifesmart.activity.BaseActivity;
 import com.ilifesmart.activity.PhoneMessageActivity;
 import com.ilifesmart.activity.SnapQrcodeVoiceActivity;
-import com.ilifesmart.model.OwnFileProvider;
+import com.ilifesmart.persistent.PersistentMgr;
 import com.ilifesmart.ui.ToastUtils;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +41,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class Utils {
 
@@ -276,7 +283,7 @@ public class Utils {
      * 下载后的包名:AndroidDemo.apk
      * */
     public static void startDownload(Context context, String apkPath) {
-        String url = "http://140.143.243.75:8090/AndroidDemo/AndroidDemo.apk"; // 下载地址
+        String url = PersistentMgr.readKV(ConfigUtils.EXTRA_TEXT_DOWNLOAD_APK_URL, ConfigUtils.download_apk_url); // 下载地址
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         Uri uri = Uri.parse(url);
         DownloadManager.Request request = new DownloadManager.Request(uri);
@@ -426,7 +433,6 @@ public class Utils {
         }
     }
 
-
     /*
      * 当前音频文件路径.
      *
@@ -435,44 +441,37 @@ public class Utils {
         return currentFile;
     }
 
-    public static final int EXTRA_MIME_NONE = 0;
-    public static final int EXTRA_MIME_IMAGE = 1;
-    public static final int EXTRA_MIME_DOC = 2;
-    public static final int EXTRA_MIME_PDF = 3;
-    public static final int EXTRA_MIME_VIDEO = 4;
-    public static final int EXTRA_MIME_VOICE = 5;
+    /*
+    * 判断当前是否是最新版本，否则前往下载.
+    * @response
+    * {
+    *   "version": "1.0.5";
+    *   "url": "http://140.143.243.75:8090/AndroidDemo/AndroidDemo.apk"
+    * }
+    * */
+    public static boolean isLastestVersion(Context context) {
+        String url = PersistentMgr.readKV(ConfigUtils.EXTRA_TEXT_LASTEST_VERSION_URL, ConfigUtils.lastest_version_url);
+        boolean isLastestVer = false;
+        try {
+            String version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
 
-    public static int isMatchMIMEType(String filename) {
-        Log.d(TAG, "isMatchMIMEType: filename " + filename);
-        int pos = filename.indexOf(".");
-        if (pos == -1 || filename.charAt(0) == '.') {
-            return EXTRA_MIME_NONE;
-        }
-        String lastName = filename.substring(pos).toLowerCase();
-        Log.d(TAG, "isMatchMIMEType: lastName " + lastName);
+            Call call = client.newCall(request);
 
-        if (lastName.equalsIgnoreCase(".jpg")
-        || lastName.equalsIgnoreCase(".png")) {
-            return EXTRA_MIME_IMAGE;
-        } else if (lastName.equalsIgnoreCase(".amr")) {
-            return EXTRA_MIME_VOICE;
-        } else if (lastName.equalsIgnoreCase(".pdf")) {
-            return EXTRA_MIME_PDF;
-        } else if (lastName.equalsIgnoreCase(".doc")
-        || lastName.equalsIgnoreCase(".docx")
-        || lastName.equalsIgnoreCase(".xls")
-        || lastName.equalsIgnoreCase("xlsx")) {
-            return EXTRA_MIME_DOC;
-        } else if (lastName.equalsIgnoreCase(".mp4")
-        || lastName.equalsIgnoreCase(".rmvb")
-        || lastName.equalsIgnoreCase(".avi")
-        || lastName.equalsIgnoreCase(".3gp")
-        || lastName.equalsIgnoreCase(".mkv")) {
-            return EXTRA_MIME_VIDEO;
+            Response response = call.execute();
+            String json = response.body().string();
+            JSONObject jsonObject = new JSONObject(json);
+            String nVer = jsonObject.getString("version");
+            PersistentMgr.putKV(ConfigUtils.EXTRA_TEXT_DOWNLOAD_APK_URL, jsonObject.getString("url"));
+
+            isLastestVer = nVer.compareTo(version) > 0;
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
-        return EXTRA_MIME_NONE;
+        return isLastestVer;
     }
 }
-
-
