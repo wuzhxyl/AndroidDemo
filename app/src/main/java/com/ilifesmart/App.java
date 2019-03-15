@@ -15,7 +15,7 @@ import com.ilifesmart.interfaces.ILocationChanged;
 public class App extends Application {
 	private static Context sContext;
 	private static Handler sHandler; // 全局性的Handler
-	private static boolean isTestVer = false;
+	private static boolean isTestVer = true;
 	private static AMapLocationClient mLocationClient;
 	private static AMapLocationClientOption mLocationClientOption;
 

@@ -15,6 +15,7 @@ import com.ilifesmart.activity.BaseActivity;
 import com.ilifesmart.activity.DevicesInfoActivity;
 import com.ilifesmart.activity.DownloadActivity;
 import com.ilifesmart.activity.H5Activity;
+import com.ilifesmart.activity.PageDetailsActivity;
 import com.ilifesmart.activity.PhoneMessageActivity;
 import com.ilifesmart.activity.SnapQrcodeVoiceActivity;
 import com.ilifesmart.util.Utils;
@@ -47,7 +48,7 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         if (!App.isTestVer()) {
-            mFtp.setVisibility(View.GONE);
+//            mFtp.setVisibility(View.GONE);
         }
     }
 
@@ -73,6 +74,7 @@ public class MainActivity extends BaseActivity {
                 Utils.startActivity(this, DownloadActivity.class);
                 break;
             case R.id.upload:
+                Utils.startActivity(this, PageDetailsActivity.class);
                 break;
             case R.id.about:
                 try {

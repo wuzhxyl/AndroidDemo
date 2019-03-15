@@ -434,6 +434,45 @@ public class Utils {
     public static File getCurrentFile() {
         return currentFile;
     }
+
+    public static final int EXTRA_MIME_NONE = 0;
+    public static final int EXTRA_MIME_IMAGE = 1;
+    public static final int EXTRA_MIME_DOC = 2;
+    public static final int EXTRA_MIME_PDF = 3;
+    public static final int EXTRA_MIME_VIDEO = 4;
+    public static final int EXTRA_MIME_VOICE = 5;
+
+    public static int isMatchMIMEType(String filename) {
+        Log.d(TAG, "isMatchMIMEType: filename " + filename);
+        int pos = filename.indexOf(".");
+        if (pos == -1 || filename.charAt(0) == '.') {
+            return EXTRA_MIME_NONE;
+        }
+        String lastName = filename.substring(pos).toLowerCase();
+        Log.d(TAG, "isMatchMIMEType: lastName " + lastName);
+
+        if (lastName.equalsIgnoreCase(".jpg")
+        || lastName.equalsIgnoreCase(".png")) {
+            return EXTRA_MIME_IMAGE;
+        } else if (lastName.equalsIgnoreCase(".amr")) {
+            return EXTRA_MIME_VOICE;
+        } else if (lastName.equalsIgnoreCase(".pdf")) {
+            return EXTRA_MIME_PDF;
+        } else if (lastName.equalsIgnoreCase(".doc")
+        || lastName.equalsIgnoreCase(".docx")
+        || lastName.equalsIgnoreCase(".xls")
+        || lastName.equalsIgnoreCase("xlsx")) {
+            return EXTRA_MIME_DOC;
+        } else if (lastName.equalsIgnoreCase(".mp4")
+        || lastName.equalsIgnoreCase(".rmvb")
+        || lastName.equalsIgnoreCase(".avi")
+        || lastName.equalsIgnoreCase(".3gp")
+        || lastName.equalsIgnoreCase(".mkv")) {
+            return EXTRA_MIME_VIDEO;
+        }
+
+        return EXTRA_MIME_NONE;
+    }
 }
 
 

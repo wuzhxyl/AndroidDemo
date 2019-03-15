@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.READ_USER_DICTIONARY" />
 
     <application
         android:name="com.ilifesmart.App"
@@ -24,9 +25,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.ilifesmart.activity.H5Activity"
-            android:theme="@style/FullActivity"
-            >
+        <activity android:name="com.ilifesmart.activity.PageDetailsActivity">
+        </activity>
+        <activity
+            android:name="com.ilifesmart.activity.H5Activity"
+            android:theme="@style/FullActivity">
         </activity>
         <activity android:name="com.ilifesmart.activity.DownloadActivity">
         </activity>
@@ -51,6 +54,7 @@
             </intent-filter>
         </activity>
 
+        <!-- 下载图片的保存地址 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.android.fileprovider"
