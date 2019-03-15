@@ -1,7 +1,9 @@
 package com.ilifesmart;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -11,8 +13,10 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.ilifesmart.interfaces.ILocationChanged;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.commonsdk.UMConfigure;
 
-public class App extends Application {
+public class App extends Application implements Application.ActivityLifecycleCallbacks {
 	private static Context sContext;
 	private static Handler sHandler; // 全局性的Handler
 	private static boolean isTestVer = true;
@@ -65,6 +69,10 @@ public class App extends Application {
 		mLocationClientOption.setNeedAddress(false);
 		mLocationClient.setLocationListener(mLocationListener);
 		mLocationClient.setLocationOption(mLocationClientOption);
+
+		UMConfigure.init(sContext, UMConfigure.DEVICE_TYPE_PHONE, null);
+
+		registerActivityLifecycleCallbacks(this);
 	}
 
 	private static ILocationChanged sLocationCB;
@@ -87,5 +95,40 @@ public class App extends Application {
 
 	public static boolean isTestVer() {
 		return isTestVer;
+	}
+
+	@Override
+	public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+
+	}
+
+	@Override
+	public void onActivityStarted(Activity activity) {
+
+	}
+
+	@Override
+	public void onActivityResumed(Activity activity) {
+		MobclickAgent.onResume(activity);
+	}
+
+	@Override
+	public void onActivityPaused(Activity activity) {
+		MobclickAgent.onPause(activity);
+	}
+
+	@Override
+	public void onActivityStopped(Activity activity) {
+
+	}
+
+	@Override
+	public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+	}
+
+	@Override
+	public void onActivityDestroyed(Activity activity) {
+
 	}
 }
