@@ -40,7 +40,7 @@ config.txt如果没有config_file_url配置项，从一个缺省config_file_url�
 
 ## 测试Demo如下:
 
-- config_file_url: http://140.143.243.75:8090/config/app_web_config.json
+- config_file_url: http://140.143.243.75:8090/config/androiddemo_web_config.txt
 - home_page_url: http://140.143.243.75:8090/index.html
 - APK下载地址: http://140.143.243.75:8090/AndroidDemo/AndroidDemo.apk
 ```
