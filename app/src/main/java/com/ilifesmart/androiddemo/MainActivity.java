@@ -47,9 +47,13 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        if (!App.isTestVer()) {
+//        if (!App.isTestVer()) {
 //            mFtp.setVisibility(View.GONE);
-        }
+//            mH5.setVisibility(View.GONE);
+//            mDevicePhoneMsg.setVisibility(View.GONE);
+//            mShare.setVisibility(View.GONE);
+//
+//        }
     }
 
     @OnClick({R.id.H5, R.id.device_info, R.id.device_phone_msg, R.id.snap_scancode_voice, R.id.share, R.id.upgrade, R.id.upload, R.id.about})

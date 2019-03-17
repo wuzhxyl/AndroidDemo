@@ -28,7 +28,7 @@
         <activity android:name="com.ilifesmart.activity.PageDetailsActivity">
         </activity>
         <activity
-            android:name="com.ilifesmart.activity.H5Activity"
+            android:name=".MainActivity"
             android:theme="@style/FullActivity">
         </activity>
         <activity android:name="com.ilifesmart.activity.DownloadActivity">
@@ -46,7 +46,7 @@
         </activity>
         <activity android:name="com.ilifesmart.activity.PhoneMessageActivity">
         </activity>
-        <activity android:name=".MainActivity">
+        <activity android:name="com.ilifesmart.activity.H5Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

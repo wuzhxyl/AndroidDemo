@@ -1,0 +1,217 @@
+<html>
+    <head>
+        <meta content="text/html; charset=utf-8" http-equiv="content-type">
+        <title>
+            js调用java
+        </title>
+
+        <script>
+        function sendMessage() {
+            var mobile = document.getElementById("text1").value;
+            var message = document.getElementById("text2").value;
+
+            //call native method
+            window.WebViewJavascriptBridge.callHandler(
+                'sendMessage'
+                , '{"mobile":' + mobile + ', "message":' + message + '}'
+                , function(responseData) {
+                    document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
+                }
+            );
+        }
+
+        function dialMobile() {
+            var mobile = document.getElementById("text1").value;
+                        //call native method
+            window.WebViewJavascriptBridge.callHandler(
+                'dialMobile'
+                , '{"mobile":' + mobile + '}'
+                , function(responseData) {
+                    document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
+                }
+            );
+        }
+
+        function scanQrcode() {
+            window.WebViewJavascriptBridge.callHandler(
+                'scanQrcode'
+                , ''
+                , function(responseData) {
+                    document.getElementById("show").innerHTML = "send get responseData from java, Qrcode = " + responseData
+                }
+            );
+        }
+
+        function mobileInfo() {
+            window.WebViewJavascriptBridge.callHandler(
+                'getMobileInfo'
+                , ''
+                , function(responseData) {
+                    document.getElementById("show").innerHTML = "send get responseData from java, MobileInfo = " + responseData
+                }
+            );
+        }
+
+        function clipboardInfo() {
+            window.WebViewJavascriptBridge.callHandler(
+                'getClipboardInfo'
+                , ''
+                , function(responseData) {
+                    document.getElementById("show").innerHTML = "send get responseData from java, clipboardInfo = " + responseData
+                }
+            );
+        }
+
+        function locationInfo() {
+            window.WebViewJavascriptBridge.callHandler(
+                'getLocationInfo'
+                , ''
+                , function(responseData) {
+                    document.getElementById("show").innerHTML = "send get responseData from java, locationInfo = " + responseData
+                }
+            );
+        }
+
+        function shareContent() {
+            var content = document.getElementById("share_content").value;
+                        //call native method
+            window.WebViewJavascriptBridge.callHandler(
+                'shareInApp'
+                , '{"content":' + content + '}'
+                , function(responseData) {
+                    document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
+                }
+            );
+        }
+
+        function openAlbum() {
+            window.WebViewJavascriptBridge.callHandler(
+                'getAlbumFile'
+                , ''
+                , function(responseData) {
+                    document.getElementById("show").innerHTML = "send get responseData from java, locationInfo = " + responseData
+                }
+            );
+        }
+
+        <!--function networkInfo() {-->
+            <!--window.WebViewJavascriptBridge.callHandler(-->
+                <!--'getNetworkInfo'-->
+                <!--, ''-->
+                <!--, function(responseData) {-->
+                    <!--document.getElementById("show").innerHTML = "send get responseData from java, networkInfo = " + responseData-->
+                <!--}-->
+            <!--);-->
+        <!--}-->
+
+        function testDiv() {
+            document.getElementById("show").innerHTML = document.getElementsByTagName("html")[0].innerHTML;
+        }
+
+        function testClick() {
+            var str1 = document.getElementById("text1").value;
+            var str2 = document.getElementById("text2").value;
+
+            //send message to native
+            var data = {id: 1, content: "这是一个图片 <img src=\"a.png\"/> test\r\nhahaha"};
+            window.WebViewJavascriptBridge.send(
+                data
+                , function(responseData) {
+                    document.getElementById("show").innerHTML = "repsonseData from java, data = " + responseData
+                }
+            );
+
+        }
+
+        function bridgeLog(logContent) {
+            document.getElementById("show").innerHTML = logContent;
+        }
+
+        function connectWebViewJavascriptBridge(callback) {
+            if (window.WebViewJavascriptBridge) {
+                callback(WebViewJavascriptBridge)
+            } else {
+                document.addEventListener(
+                    'WebViewJavascriptBridgeReady'
+                    , function() {
+                        callback(WebViewJavascriptBridge)
+                    },
+                    false
+                );
+            }
+        }
+
+        connectWebViewJavascriptBridge(function(bridge) {
+            bridge.init(function(message, responseCallback) {
+                console.log('JS got a message', message);
+                var data = {
+                    'Javascript Responds': '测试中文!'
+                };
+
+                if (responseCallback) {
+                    console.log('JS responding with', data);
+                    responseCallback(data);
+                }
+            });
+
+            bridge.registerHandler("functionInJs", function(data, responseCallback) {
+                document.getElementById("show").innerHTML = ("data from Java: = " + data);
+                if (responseCallback) {
+                    var responseData = "Javascript Says Right back aka!";
+                    responseCallback(responseData);
+                }
+            });
+        })
+
+        function previewFile() {
+            var img = document.getElementById("img");
+            // 仅限上传单张图片
+            var file = document.querySelector('input[type=file]').files[0];
+
+            var reader  = new FileReader();
+            reader.addEventListener("load", function () {
+                    img.src = reader.result;  // 存储在本地的图片的base64编码
+                    <!--alert("result=" + reader.result);-->
+            }, false);
+
+            if (file) {
+              reader.readAsDataURL(file);
+            }
+        }
+    </script>
+
+    </head>
+    
+    <body>
+        <p>
+            <xmp id="show">
+            </xmp>
+        </p>
+        <p>
+            <xmp id="init">
+            </xmp>
+        </p>
+
+        <!-- 本地Native功能调用 -->
+        <input type="text" id="text1" placeholder="手机号码" />
+        <input type="text" id="text2" placeholder="信息内容" />
+        <input type="button" value="拨打电话" onclick="dialMobile()" />
+        <input type="button" value="发短信息" onclick="sendMessage()"/>
+        <input type="button" value="扫码" onclick="scanQrcode()"/>
+        <input type="button" value="手机信息" onclick="mobileInfo()"/>
+        <input type="button" value="剪贴板信息" onclick="clipboardInfo()"/>
+        <input type="button" value="位置信息" onclick="locationInfo()"/>
+        <input accept="image/*" capture="camera" id="imgFile" name="imgFile"  type="file" onclick="openAlbum()" onchange="previewFile()" > <br/>
+        <img src="" id="img" />
+        <p>
+            <input type="text" id="share_content" value="测试数据，请忽略." />
+            <input type="button" value="微信/微博分享" onclick="shareContent()"/>
+        </p>
+        <p> <input type="button" id="enter2" value="显示html" onclick="testDiv();" /> </p>
+
+        <!-- 暂不支持其它格式文件,TODO. -->
+        <!--<p> <input type="file" value="打开文件" /> </p>-->
+    </body>
+
+</html>
+

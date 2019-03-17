@@ -20,6 +20,7 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -162,6 +163,14 @@ public class Utils {
         }
     }
 
+    public static void setPermissionsSendMessage(AppCompatActivity activity, String phone, String message) {
+        if (Utils.checkPermissionGranted(new String[] {Utils.PERMISSIONS_SEND_MESSAGE, Utils.PERMISSIONS_READ_PHONE_STATE})) {
+            sendMessage(activity, phone, message);
+        } else {
+            Utils.requestPermissions(activity, new String[] {Utils.PERMISSIONS_SEND_MESSAGE, Utils.PERMISSIONS_READ_PHONE_STATE}, true, Utils.PERMISSION_CODE_SEND_MESSAGE);
+        }
+    }
+
 
     /*
      * 创建图片路径。文件名格式为JPEG_20180921_143030_
@@ -268,7 +277,12 @@ public class Utils {
 
     // 测试打印输出.
     public static String getDevInfo() {
-        return "Android版本: " + getOsVersion() + ";\n型号: " + getMobileModel();
+        try {
+            return new JSONObject().put("OSVersion", getOsVersion()).put("Model", getMobileModel()).toString();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return "none";
     }
 
     // 获取文件Uri.
