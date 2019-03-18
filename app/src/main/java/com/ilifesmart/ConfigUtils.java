@@ -3,7 +3,7 @@ package com.ilifesmart;
 import com.ilifesmart.persistent.PersistentMgr;
 
 public class ConfigUtils {
-	public static String EXTRA_TEXT_NONE = null;
+	public static String EXTRA_TEXT_NONE = "file:///android_asset/web/index.html";
 	private static final int VER_CODE_EXTRA_TEXT_HOME_PAGE = 0;
 	private static final int VER_CODE_CONFIG_FILE_URL = 0;
 	private static String config_file_url_test = "http://140.143.243.75:8090/config/androiddemo_web_config.txt";

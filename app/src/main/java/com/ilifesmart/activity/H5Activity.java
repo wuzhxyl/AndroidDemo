@@ -311,7 +311,7 @@ public class H5Activity extends BaseActivity {
 	}
 
 	private void loadWeb() {
-		String url = "file:///android_asset/web/index.html";
+		String url = ConfigUtils.getCurrentHomePage();
 		if (!TextUtils.isEmpty(url)) {
 			mWeb.loadUrl(url);
 		}
