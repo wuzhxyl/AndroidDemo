@@ -14,8 +14,8 @@ android {
         applicationId "com.ilifesmart.androiddemo"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 9
-        versionName "1.0.9"
+        versionCode 10
+        versionName "1.0.10"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.sign
     }
