@@ -328,7 +328,7 @@ public class H5Activity extends BaseActivity {
             Utils.requestPermissions(this, new String[]{Utils.PERMISSIONS_ACCESS_FINE_LOCATION}, true, Utils.PERMISSION_CODE_ACCESS_FINE_LOCATION);
         }
 
-//		new DownloadTask().execute();
+		new DownloadTask().execute(); //自动更新
 	}
 
 	@Override
@@ -387,6 +387,7 @@ public class H5Activity extends BaseActivity {
 						new DownloadTask().execute();
 						break;
 					case MENU_ITEM_SETTINGS:
+                        popupWindow.dismiss();
 						Utils.startActivity(H5Activity.this, MainActivity.class);
 				}
 			}
