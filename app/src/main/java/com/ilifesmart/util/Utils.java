@@ -43,6 +43,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -490,11 +492,50 @@ public class Utils {
             String nVer = jsonObject.getString("version");
             PersistentMgr.putKV(ConfigUtils.EXTRA_TEXT_DOWNLOAD_APK_URL, jsonObject.getString("url"));
 
-            isLastestVer = nVer.compareTo(version) > 0;
+            isLastestVer = isLastestVer(nVer, version);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
         return isLastestVer;
+    }
+
+    /*
+    * @Result: 默认为false
+    * true:  下载更新
+    * false: 保持当前版本
+    * */
+    private static boolean isLastestVer(String nver, String cver) {
+        if (nver == null || nver.isEmpty() || cver == null || cver.isEmpty() || nver.trim().equalsIgnoreCase(cver.trim())) {
+            return false;
+        }
+
+        String pattern = "(\\d*).(\\d*).(\\d*)";
+        int over_h, over_m, over_l;
+        int nver_h, nver_m, nver_l;
+
+        Matcher oldMatcher = Pattern.compile(pattern).matcher(cver);
+        Matcher newMatcher = Pattern.compile(pattern).matcher(nver);
+
+        try {
+            if (oldMatcher.find() && newMatcher.find()) {
+                over_h = Integer.parseInt(oldMatcher.group(1));
+                over_m = Integer.parseInt(oldMatcher.group(2));
+                over_l = Integer.parseInt(oldMatcher.group(3));
+
+                nver_h = Integer.parseInt(newMatcher.group(1));
+                nver_m = Integer.parseInt(newMatcher.group(2));
+                nver_l = Integer.parseInt(newMatcher.group(3));
+
+                boolean isLaster = nver_h >= over_h;
+                isLaster &= (nver_m >= over_m);
+                isLaster &= (nver_l >= over_l);
+                return isLaster;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
     }
 }
