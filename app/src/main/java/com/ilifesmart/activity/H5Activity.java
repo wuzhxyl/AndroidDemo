@@ -110,6 +110,7 @@ public class H5Activity extends BaseActivity {
 		});
 
 		WebSettings webSettings = mWeb.getSettings();
+		webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE); // 不使用缓存
 		webSettings.setJavaScriptEnabled(true);    // 支持JS
 		webSettings.setAppCacheEnabled(false);     // 不缓存
 		webSettings.setUseWideViewPort(true);      // 自适应手机屏幕

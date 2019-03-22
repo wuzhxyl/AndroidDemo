@@ -20,6 +20,7 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.support.v4.content.PermissionChecker;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
 import android.text.TextUtils;
@@ -64,10 +65,18 @@ public class Utils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
+    public static boolean isTargetAfterM() {
+        return App.getContext().getApplicationInfo().targetSdkVersion >= Build.VERSION_CODES.M;
+    }
+
     // 检查权限是否授予.
     public static boolean checkPermissionGranted(String permission) {
         if (isVersionAfterM()) {
-            return (App.getContext().checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED);
+            if (isTargetAfterM()) {
+                return (App.getContext().checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED);
+            } else {
+                return PermissionChecker.checkSelfPermission(App.getContext(), permission) == PackageManager.PERMISSION_GRANTED;
+            }
         }
 
         return true;
