@@ -39,7 +39,7 @@ public class BaseActivity extends AppCompatActivity {
 	public static boolean isShouldHideInput(View v, MotionEvent ev) {
 		if (v != null && (v instanceof EditText)) {
 			int[] leftTop = {0, 0};
-			v.getLocationInWindow(leftTop);
+			v.getLocationInWindow(leftTop); // 当前窗口内的绝对地址，相对于Group的左上角
 			int left = leftTop[0];
 			int top = leftTop[1];
 

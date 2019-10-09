@@ -358,7 +358,7 @@ public class Utils {
      * */
     public static void onSendText(Context context, String text) {
         Intent share = new Intent(Intent.ACTION_SEND);
-        share.setType("*/*");
+        share.setType("text/html");
         share.putExtra(Intent.EXTRA_SUBJECT, ""); // 主题
         share.putExtra(Intent.EXTRA_TEXT, ""); // 正文字符串
         share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -372,7 +372,7 @@ public class Utils {
                     continue;
                 }
                 Intent i = new Intent(Intent.ACTION_SEND);
-                i.setType("text/plain");
+                i.setType("text/html");
                 i.putExtra(Intent.EXTRA_SUBJECT, "分享"); // 主题
                 i.putExtra(Intent.EXTRA_TEXT, text); // 正文字符串
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -401,6 +401,8 @@ public class Utils {
         } else {
             Toast.makeText(context, "未找到微信/微博", Toast.LENGTH_SHORT).show();
         }
+
+
     }
 
 

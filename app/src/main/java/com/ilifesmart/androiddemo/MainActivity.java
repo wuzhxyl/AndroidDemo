@@ -72,7 +72,7 @@ public class MainActivity extends BaseActivity {
                 Utils.startActivity(this, SnapQrcodeVoiceActivity.class);
                 break;
             case R.id.share:
-                Utils.onSendText(this, "系统测试数据, 请忽略。");
+                Utils.onSendText(this, "https://www.baidu.com/");
                 break;
             case R.id.upgrade:
                 Utils.startActivity(this, DownloadActivity.class);
